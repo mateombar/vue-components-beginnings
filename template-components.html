@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <pizza
+        v-for="(pizza) in pizzas"
+        :key="pizza.name"
+        :name="pizza.name"
+        :image="pizza.image"
+        :amount="pizza.amount"
+      ></pizza>
+    </div>
+    <script type="text/x-template" id="pizza-template">
+      <article>
+        <h2>{{name}}</h2>
+        <section>
+            <button class="btn-add" @click="morePizza">Add</button>
+            <pre>{{amount}}</pre>
+            <button class="btn-less" @click="lessPizza">Less</button>
+        </section>
+        <img :src="image" :alt="name">
+      </article>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+      const pizza = {
+        props: ["name", "image", "amount"],
+        template: "#pizza-template",
+        methods: {
+          morePizza() {
+            this.amount++;
+          },
+          lessPizza() {
+            this.amount > 0 && this.amount--;
+          },
+        },
+      };
+
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          pizzas: [
+            {
+              name: "Hawaiana",
+              image:
+                "https://images.rappi.com/products/2091650212-1604275940327.jpg?d=128x90",
+              amount: 0,
+            },
+            {
+              name: "Chicken with mushrooms",
+              image:
+                "https://images.rappi.com/products/99d8a1f7-55ba-4dff-a836-490ab5e6ee34-1574537900813.png?d=128x90",
+              amount: 0,
+            },
+            {
+              name: "Napolitana",
+              image:
+                "https://images.rappi.com/products/2091650213-1604275413024.jpg?d=128x90",
+              amount: 0,
+            },
+          ],
+        },
+        components: {
+          pizza,
+        },
+      });
+    </script>
+  </body>
+</html>
