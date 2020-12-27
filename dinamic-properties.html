@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .btn{
+            color: white;
+            padding: 5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <btn color="blue" link="https://www.platzi.com" anchor-text="Platzi"></btn>
+        <btn color="blue" anchor-text="Google"></btn>
+        <h3>With data</h3>
+        <btn v-for="btn in btns" :color="btn.color" :link="btn.link" :anchor-text="btn.anchorText"/>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        Vue.component('btn', {
+            props:{
+                color: String,
+                link: {
+                    type: String,
+                    default: "https://www.google.com/"
+                },
+                anchorText: String
+            },
+            template: `
+            <a class="btn" :style="'background-color:' + color" :href="link">{{anchorText}}</a>
+            `
+        })
+        const vm = new Vue({
+            el: '#app',
+            data:{
+                btns: [
+                    {color:'green', link:'https://www.platzi.com', anchorText: 'Platzi'},
+                    {color:'red', link:'https://www.google.com/', anchorText: 'Google'},
+                ]
+            }
+        });
+    </script>
+</body>
+</html>
