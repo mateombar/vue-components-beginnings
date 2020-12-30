@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        font-family: "Courier New", Courier, monospace;
+      }
+      .users {
+        padding: 10px 0px;
+        display: flex;
+        justify-content: flex-start;
+      }
+      .user {
+        width: 300px;
+        border: 1px solid red;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <article class="users">
+        <section>
+          <h1>Able Users {{usersAble.length}}</h1>
+          <users :list="usersAble" mover-a="usersSelected"></users>
+        </section>
+        <section>
+          <h1>Selected Users {{usersSelected.length}}</h1>
+          <users :list="usersSelected" mover-a="usersAble"></users>
+        </section>
+      </article>
+    </div>
+    <script type="text/x-template" id="users-template">
+      <section>
+        <user @selection="editSelection" v-for="user in list" :key="user.username" :info="user"></user>
+      </section>
+    </script>
+
+
+    <script type="text/x-template" id="user-template">
+      <article class="user" @click="modifySelectcion">
+          <img :src="info.picture.large" :alt="info.name">
+          <h2>{{fullName}}</h2>
+          <a :href="info.email">{{info.email}}</a>
+          <p>{{info.username}}</p>
+      </article>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+      const user = {
+        props: ["info"],
+        template: "#user-template",
+        computed: {
+          fullName() {
+            return `${this.info.name.title}: ${this.info.name.first} ${this.info.name.last}`;
+          },
+        },
+        methods:{
+          modifySelectcion(){
+            this.$emit("selection", this.info.username);
+          }
+        }
+      };
+      // User wrapper
+      const users = {
+        props: ["list", "moverA"],
+        template: "#users-template",
+        components: {
+          user,
+        },
+        methods:{
+          editSelection(username){
+            const index = this.list.findIndex(element =>{
+              return element.username === username;
+            });
+            if (index > -1){
+              // Get the element to extract
+              const element = this.list.splice(index, 1)[0];
+              console.log(this.$root);
+              // Add it to the group corresponds
+              this.$root[this.moverA].unshift(element);
+            }
+            
+            // this.$emit('change-values')
+          }
+        }
+      };
+
+      const vm = new Vue({
+        created() {
+          const proxyurl = "https://cors-anywhere.herokuapp.com/";
+          const url = "https://randomuser.me/api/?results=10";
+          fetch(proxyurl + url)
+            .then((response) => response.json())
+            .then(
+              (response) =>
+                (this.usersAble = response.results.map((user) => {
+                  return {
+                    username: user.login.username,
+                    name: user.name,
+                    email: user.email,
+                    picture: user.picture,
+                  };
+                }))
+            )
+            .catch(() =>
+              console.error(
+                "Can’t access " + url + " response. Blocked by browser?"
+              )
+            );
+        },
+        el: "#app",
+        data: {
+          usersAble: [],
+          usersSelected: [],
+        },
+        components: {
+          users,
+        },
+        methods:{
+          regards(){
+            console.log('Hellllo');
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
