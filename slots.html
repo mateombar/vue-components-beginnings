@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <base-article :datas="datas">
+        <template #header>
+          <h1>{{datas.title}}</h1>
+          <h3>Bienvenidos a mi Web</h3>
+          <h4>Entrale wey</h4>
+        </template>
+        <template #article>
+          <h1>Article Title</h1>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid, ab
+            aspernatur, quas illum debitis iure dolores quos ipsam vitae
+            recusandae qui nemo aperiam quia nisi quidem eius perspiciatis
+            doloribus odit.
+          </p>
+        </template>
+        <template #aside>
+          <nav>
+            <ul>
+              <li>LINK</li>
+              <li>LINK</li>
+              <li>LINK</li>
+            </ul>
+          </nav>
+        </template>
+        <template #foot>
+          <small>2020</small>
+        </template>
+      </base-article>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script type="text/x-template" id="base-article-template">
+      <div>
+        <header>
+          <slot name="header" :datas="datas"></slot>
+        </header>
+        <article>
+          <slot name="article"></slot>
+        </article>
+        <aside>
+          <slot name="aside"></slot>
+        </aside>
+        <footer>
+          <slot name="foot"></slot>
+        </footer>
+
+      </div>
+    </script>
+    <script>
+      Vue.component("base-article", {
+        props: ['datas'],
+        template: "#base-article-template",
+      });
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          datas: {
+            title: 'Title from model'
+          }
+        },
+      });
+    </script>
+  </body>
+</html>
