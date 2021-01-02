@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <h4>Syntax Sugar v-model</h4>
+      <input type="text" v-model="find" />
+      <h4>Funcionamiento original de v-model</h4>
+      <input :value="find" @input="find = $event.target.value" type="text" />
+      <h4>v-model with components</h4>
+      <input-component v-model="find">
+        <template #text> Busqueda </template>
+      </input-component>
+      <input-component v-model="cosa">
+        <template #text> Cosa </template>
+      </input-component>
+      <input-component v-model="casa">
+        <template #text> Casa </template>
+      </input-component>
+      <pre>{{ $data }}</pre>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+      Vue.component('input-component', {
+        props: ['value'],
+        template: `
+        <div style="margin-bottom: 20px;">
+            <label style="display: block;" :for="id">
+                <slot name="text"></slot>
+            </label>
+            <input v-bind:value="value" v-on:input="$emit('input', $event.target.value)" type="text" :id="id">
+        </div>
+        `,
+        data() {
+          return {
+            id: `input-${Math.floor(Math.random() * 10) + 1}`,
+          };
+        },
+      });
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          find: "buscar",
+          casa: "casa",
+          cosa: "cosa",
+        },
+      });
+      Vue.config.devtools = true;
+    </script>
+  </body>
+</html>
